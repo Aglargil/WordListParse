@@ -36,7 +36,7 @@
 ## 类图
 定义一个抽象的`basePaser`, 一个模板类`Paser<T>`继承于`basePaser`
 
-`WordListParse`维护一个`vector<baseParser*>`
+`WordListParse`维护一个`vector<BaseParser*>`
 
 ![](https://cdn.nlark.com/yuque/__puml/bd5f2f090f7f32ee261d85d449683cf4.svg)
 
@@ -62,28 +62,28 @@
 ## 分隔符的作用
 - `\t` 用于分割每一列
 - `,` 用于分割`vector`类型元素的每一项
-- `|` 用户自定义分隔符, 用于分割`customerData`的每一项
+- `|` 用户自定义分隔符, 用于分割`CustomerData`的每一项
 
 ### 自定义类型
 
 ```cpp
-struct customerData {
+struct CustomerData {
     int a;
     float b;
 };
-struct embedData {
-    customerData data;
+struct EmbedData {
+    CustomerData data;
     std::string str;
 };
 ```
 
 ## 自定义`parse()`
-每个自定义类型需要有自己唯一的自定义分隔符, 这里的`customerData`使用`|`, `embedData`使用`~`
+每个自定义类型需要有自己唯一的自定义分隔符, 这里的`CustomerData`使用`|`, `EmbedData`使用`~`
 
 ```cpp
 template<>
-inline bool parse(const std::string& input, customerData& output) {
-    auto wordParse = [&output](const std::string& word, int index) {
+inline bool parse(const std::string& input, CustomerData& output) {
+    auto word_parse = [&output](const std::string& word, int index) {
         if (index == 0) {
             parse(word, output.a);
         } else if (index == 1) {
@@ -92,12 +92,12 @@ inline bool parse(const std::string& input, customerData& output) {
 
         return true;
     };
-    return readLine(input, '|', wordParse);
+    return read_line(input, '|', word_parse);
 }
 
 template<>
-inline bool parse(const std::string& input, embedData& output) {
-    auto wordParse = [&output](const std::string& word, int index) {
+inline bool parse(const std::string& input, EmbedData& output) {
+    auto word_parse = [&output](const std::string& word, int index) {
         if (index == 0) {
             parse(word, output.data);
         } else if (index == 1) {
@@ -106,7 +106,7 @@ inline bool parse(const std::string& input, embedData& output) {
 
         return true;
     };
-    return readLine(input, '~', wordParse);
+    return read_line(input, '~', word_parse);
 }
 
 ```
